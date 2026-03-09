@@ -1562,13 +1562,15 @@ where
 
                 #[cfg(feature = "orchard")]
                 {
-                    builder.add_orchard_output(
+                    // ZIP-2005 phase 1: Orchard change notes use quantum-recoverable (V3_Qr) rcm derivation.
+                    builder.add_versioned_orchard_output(
                         internal_ovk.map(|k| k.into()),
                         ufvk.orchard()
                             .ok_or(Error::KeyNotAvailable(PoolType::ORCHARD))?
                             .address_at(0u32, orchard::keys::Scope::Internal),
                         change_value.value(),
                         memo.clone(),
+                        orchard::note::NoteVersion::V3_Qr,
                     )?;
                     orchard_output_meta.push((
                         BuildRecipient::InternalAccount {
